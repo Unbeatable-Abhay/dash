@@ -1,4 +1,5 @@
 import os
+import json
 import requests
 from datetime import datetime
 from selenium import webdriver
@@ -13,6 +14,17 @@ API_KEY = os.getenv("RENDER_API_KEY")
 BASE_URL = "https://api.render.com/v1"
 
 
+def save_cache(data):
+    with open("cache.json", "w") as f:
+        json.dump(data, f)
+
+
+def load_cache():
+    if not os.path.exists("cache.json"):
+        return {"last_synced_at": None, "hosting": {}, "apis": [], "projects": []}
+    with open("cache.json") as f:
+        return json.load(f)
+
 
 if not API_KEY:
     print("No API key found!")
@@ -23,6 +35,12 @@ headers = {
     "Authorization": f"Bearer {API_KEY}",
     "Content-Type": "application/json"
 }
+
+
+@app.route("/api/dashboard", methods=["GET"])
+def get_dashboard():
+    data = load_cache()
+    return jsonify(data), 200
 
 
 def get_status(service_id):
@@ -51,13 +69,22 @@ def sync_dashboard():
             projects.append({
                 "name": service["name"],
                 "type": service["type"],
-                "is_online": get_status(service["id"], 1),
-                "render_url": get_status(service["id"], 2),
-                "plan": get_status(service["id"], 3)
+                "is_online": get_status(service["id"]),
+                "render_url": get_status(service["id"]),
+                "plan": get_status(service["id"])
             })
     else:
         print("Error:", response.status_code, response.text)
-    return jsonify(last_sync_at=last_sync_info, projects=projects), 200
+
+    data = {
+        "last_synced_at": last_sync_info,
+        "hosting": {},
+        "apis": [],
+        "projects": projects
+    }
+    
+    save_cache(data)
+    return jsonify(data), 200
 
 
 if __name__ == "__main__":
