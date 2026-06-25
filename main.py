@@ -43,7 +43,6 @@ def sync_dashboard():
     last_sync_info = datetime.now().isoformat()
     projects = []
     response = requests.get(f"{BASE_URL}/services", headers=headers, timeout=10)
-    # print("Services",response.json())
     if response.status_code == 200:
         services = response.json()
         for item in services:
