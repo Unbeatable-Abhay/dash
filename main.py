@@ -96,8 +96,8 @@ def check_tavily():
     }
 
     response_tavily = requests.get(f"{TAVILY_BASE_URL}/usage", headers=headers, timeout=10).json()
-    plan_usage = response_tavily.get("account", {}).get("plan_usage", "None")
-    plan_limit = response_tavily.get("account", {}).get("plan_limit", "None")
+    plan_usage = response_tavily.get("account", {}).get("plan_usage", None)
+    plan_limit = response_tavily.get("account", {}).get("plan_limit", None)
 
     return {"name": "Tavily api", "used": plan_usage, "total": plan_limit, "resets_in_seconds": left_time(1)}
 
@@ -144,11 +144,11 @@ def get_status(service_id):
 
     return {
         "is_online": status == "live",
-        "render_url": service.get("dashboardUrl", ""),
-        "plan": service.get("serviceDetails", {}).get("plan", "None")
+        "render_url": service.get("dashboardUrl", None),
+        "plan": service.get("serviceDetails", {}).get("plan", None)
     }
 
-API_TOTAL = [check_tavily, check_groq()]
+API_TOTAL = [check_tavily, check_groq]
 @app.route("/api/sync", methods=['POST'])
 def sync_dashboard():
     apis = {
@@ -165,7 +165,7 @@ def sync_dashboard():
         apis = {
             "last_synced_at": left_time(2),
             "hosting": {
-                "hours_used": 500,
+                "hours_used": 517.50,
                 "hours_total": 750,
                 "renews_on": get_renewal_date()
                 },
