@@ -1,0 +1,67 @@
+.ambient-background {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ambient-background::before,
+.ambient-background::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+}
+
+/* Dark theme: warm amber/gold bokeh glows on a near-black base, matching
+   the reference image's room-light ambiance. */
+[data-theme='dark'] .ambient-background {
+  background: radial-gradient(ellipse at 50% 0%, #1a1610 0%, #0a0a0d 55%);
+}
+
+[data-theme='dark'] .ambient-background::before {
+  top: -10%;
+  left: 8%;
+  width: 38vw;
+  height: 38vw;
+  max-width: 420px;
+  max-height: 420px;
+  background: radial-gradient(circle, rgba(255, 197, 120, 0.30), transparent 70%);
+}
+
+[data-theme='dark'] .ambient-background::after {
+  top: -14%;
+  right: 12%;
+  width: 30vw;
+  height: 30vw;
+  max-width: 340px;
+  max-height: 340px;
+  background: radial-gradient(circle, rgba(255, 170, 90, 0.22), transparent 70%);
+}
+
+/* Light theme: same warm glow, much softer, on an off-white base — keeps
+   the floating-panel feel without overwhelming light-mode contrast. */
+[data-theme='light'] .ambient-background {
+  background: radial-gradient(ellipse at 50% 0%, #fff3e2 0%, #eef0f6 55%);
+}
+
+[data-theme='light'] .ambient-background::before {
+  top: -10%;
+  left: 8%;
+  width: 38vw;
+  height: 38vw;
+  max-width: 420px;
+  max-height: 420px;
+  background: radial-gradient(circle, rgba(255, 200, 130, 0.35), transparent 70%);
+}
+
+[data-theme='light'] .ambient-background::after {
+  top: -14%;
+  right: 12%;
+  width: 30vw;
+  height: 30vw;
+  max-width: 340px;
+  max-height: 340px;
+  background: radial-gradient(circle, rgba(255, 180, 110, 0.28), transparent 70%);
+}

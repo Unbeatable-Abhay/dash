@@ -1,0 +1,29 @@
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.status-pill--online {
+  background: var(--bg-pill-online);
+  color: var(--text-online);
+}
+
+.status-pill--offline {
+  background: var(--bg-pill-offline);
+  color: var(--text-offline);
+}
+
+/* Independent fade timing — deliberately not tied to the speedometer
+   sweep duration elsewhere. Plays on mount and on key change. */
+.status-pill--fade {
+  animation: statusPillFade 220ms var(--ease-ios);
+}
+
+@keyframes statusPillFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

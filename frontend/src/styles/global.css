@@ -1,0 +1,67 @@
+@import './theme.css';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: transparent;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-y: none;
+  transition: color 280ms var(--ease-ios);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Hide scrollbars on horizontal scroll rows while keeping them functional */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Universal iOS-style press feedback. Apply via the .pressable class
+   on any tappable element — buttons, rows, icons, radio options. */
+.pressable {
+  transition: transform var(--duration-press) var(--ease-ios),
+              opacity var(--duration-press) var(--ease-ios);
+  -webkit-user-select: none;
+  user-select: none;
+}
+.pressable:active {
+  transform: scale(0.95);
+  opacity: 0.85;
+}
+
+/* Slightly gentler press for large/full-width surfaces (cards, big buttons) */
+.pressable-soft:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}

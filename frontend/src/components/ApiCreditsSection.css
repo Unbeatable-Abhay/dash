@@ -1,0 +1,34 @@
+.section-heading {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+}
+
+.api-credits-section {
+  width: 100%;
+}
+
+.api-credits-section__scroll-wrap {
+  position: relative;
+}
+
+.api-credits-section__row {
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  padding-bottom: 2px;
+}
+
+/* Soft fade hint at the trailing edge when more cards exist offscreen.
+   Matches --bg-app so it blends with whatever's behind it in both themes. */
+.api-credits-section__fade {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 8px;
+  width: 36px;
+  background: linear-gradient(to right, transparent, var(--bg-app));
+  pointer-events: none;
+}

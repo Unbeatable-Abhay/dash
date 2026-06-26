@@ -5,10 +5,12 @@ import calendar
 from datetime import datetime
 from selenium import webdriver
 from dotenv import load_dotenv
+from flask_cors import CORS
 from flask import Flask, jsonify
 from selenium.webdriver.common.by import By
 
 app = Flask(__name__)
+CORS(app)
 load_dotenv()
 
 API_KEY = os.getenv("RENDER_API_KEY")

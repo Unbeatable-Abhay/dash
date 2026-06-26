@@ -1,0 +1,41 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1c1c22"/>
+      <stop offset="100%" stop-color="#080809"/>
+    </linearGradient>
+    <linearGradient id="arcGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7c6cf6"/>
+      <stop offset="100%" stop-color="#5b6cf8"/>
+    </linearGradient>
+    <radialGradient id="needleGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#e8e8f5"/>
+    </radialGradient>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)"/>
+
+  <circle cx="256" cy="256" r="180" fill="#9b8cf8" opacity="0.06"/>
+
+  <g filter="url(#softGlow)" opacity="0.95">
+    <path d="M 142 318 A 130 130 0 1 1 370 318" fill="none" stroke="url(#arcGrad)" stroke-width="20" stroke-linecap="round"/>
+  </g>
+
+  <g stroke="#5b5b66" stroke-width="3" stroke-linecap="round" opacity="0.55">
+    <line x1="256" y1="118" x2="256" y2="100"/>
+    <line x1="174" y1="153" x2="161" y2="138"/>
+    <line x1="338" y1="153" x2="351" y2="138"/>
+    <line x1="120" y1="256" x2="100" y2="256"/>
+  </g>
+
+  <line x1="256" y1="295" x2="318" y2="178" stroke="url(#needleGlow)" stroke-width="10" stroke-linecap="round" filter="url(#softGlow)"/>
+  <circle cx="256" cy="295" r="17" fill="url(#needleGlow)" filter="url(#softGlow)"/>
+</svg>

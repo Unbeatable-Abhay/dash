@@ -1,0 +1,35 @@
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.dashboard-content__top-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* On wider viewports (web shell territory), hosting card and API credits
+   sit side by side, matching the reference web layout. */
+@media (min-width: 860px) {
+  .dashboard-content__top-row {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .dashboard-content__top-row > .hosting-card {
+    flex: 0 0 380px;
+  }
+
+  .dashboard-content__top-row > .api-credits-section {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dashboard-content__top-row > .api-credits-section .api-credits-section__scroll-wrap {
+    flex: 1;
+  }
+}

@@ -1,0 +1,109 @@
+/* ---------- Shared card + icon-badge primitives ---------- */
+.card {
+  background: var(--bg-card);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-card);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-6);
+  transition: background-color 280ms var(--ease-ios), border-color 280ms var(--ease-ios);
+}
+
+.icon-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-icon);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.icon-badge--purple {
+  background: linear-gradient(135deg, var(--gradient-purple-start), var(--gradient-purple-end));
+}
+.icon-badge--blue {
+  background: linear-gradient(135deg, var(--gradient-blue-start), var(--gradient-blue-end));
+}
+.icon-badge--green {
+  background: linear-gradient(135deg, var(--gradient-green-start), var(--gradient-green-end));
+}
+.icon-badge--neutral {
+  background: var(--bg-icon-soft);
+  color: var(--text-secondary);
+}
+
+/* ---------- Hosting card ---------- */
+.hosting-card__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.hosting-card__title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.hosting-card__body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.hosting-card__number {
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.hosting-card__number-total {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+}
+
+.hosting-card__label {
+  margin-top: var(--space-2);
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.hosting-card__ring {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.hosting-card__ring-label {
+  position: absolute;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.hosting-card__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  font-size: 13px;
+  color: var(--text-secondary);
+  width: fit-content;
+}
+
+.hosting-card__info-icon {
+  font-size: 15px;
+  color: var(--text-tertiary);
+}
