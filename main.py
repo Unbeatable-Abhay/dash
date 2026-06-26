@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+import calendar
 from datetime import datetime
 from selenium import webdriver
 from dotenv import load_dotenv
@@ -15,7 +16,7 @@ TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 # OPEN_ROUTER_API_KEY = os.getenv("OPEN_ROUTER_API_KEY")
 BASE_URL = "https://api.render.com/v1"
 TAVILY_BASE_URL = "https://api.tavily.com"
-# OPEN_ROUTER_BASE_URL = ""
+# OPEN_ROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
 
 if not API_KEY and not TAVILY_API_KEY:
@@ -53,6 +54,13 @@ def left_time(token: int):
         return last_sync_info
 
 
+def get_renewal_date():
+    now = datetime.now()
+    last_day = calendar.monthrange(now.year, now.month)[1]
+    renewal = datetime(now.year, now.month, last_day)
+    return renewal.strftime("%Y-%m-%d")
+
+
 def check_tavily():
     headers = {
         "Authorization": f"Bearer {TAVILY_API_KEY}",
@@ -64,6 +72,16 @@ def check_tavily():
     plan_limit = response_tavily.get("account", {}).get("plan_limit", "None")
 
     return {"name": "Tavily api", "used": plan_usage, "total": plan_limit, "resets_in_seconds": left_time(1)}
+
+
+# def check_openrouter():
+#     headers = {
+#         "Authorization": f"Bearer {OPEN_ROUTER_API_KEY}",
+#         "Content-Type": "application/json"
+#     }
+#
+#     response = requests.get(f"{OPEN_ROUTER_BASE_URL}/credits", headers=headers, timeout=10)
+#     print(response.headers)
 
 
 def check_render():
@@ -97,28 +115,35 @@ def get_status(service_id):
     return {
         "is_online": status == "live",
         "render_url": service.get("dashboardUrl", ""),
-        "plan": service.get("serviceDetails", {}).get("plan", "Unknown")
+        "plan": service.get("serviceDetails", {}).get("plan", "None")
     }
 
 API_TOTAL = [check_tavily]
 @app.route("/api/sync", methods=['POST'])
 def sync_dashboard():
     apis = {
-        "last_synced_at": 0,
-        "hosting": {},
+        "last_synced_at": None,
+        "hosting": {
+            "hours_used": None,
+            "hours_total": None,
+            "renews_on": "0000-00-00"
+        },
         "apis": [],
-        "projects": 0
+        "projects": None
     }
-    for item in API_TOTAL:
-        try:
-            apis = {
-                "last_synced_at": left_time(2),
-                "hosting": {},
-                "apis": [item()],
-                "projects": check_render()
-            }
-        except Exception as e:
-            print(f"Failed to check {item.__name__}: {e}")
+    try:
+        apis = {
+            "last_synced_at": left_time(2),
+            "hosting": {
+                "hours_used": 497.57,
+                "hours_total": 750,
+                "renews_on": get_renewal_date()
+                },
+            "apis": [item() for item in API_TOTAL],
+            "projects": check_render()
+        }
+    except Exception as e:
+        print(f"Error: {e}")
 
     save_cache(apis)
     return jsonify(apis), 200
