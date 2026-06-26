@@ -148,7 +148,7 @@ def get_status(service_id):
         "plan": service.get("serviceDetails", {}).get("plan", "None")
     }
 
-API_TOTAL = [check_tavily]
+API_TOTAL = [check_tavily, check_groq()]
 @app.route("/api/sync", methods=['POST'])
 def sync_dashboard():
     apis = {
