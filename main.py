@@ -13,10 +13,8 @@ load_dotenv()
 
 API_KEY = os.getenv("RENDER_API_KEY")
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
-# OPEN_ROUTER_API_KEY = os.getenv("OPEN_ROUTER_API_KEY")
 BASE_URL = "https://api.render.com/v1"
 TAVILY_BASE_URL = "https://api.tavily.com"
-# OPEN_ROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
 
 if not API_KEY and not TAVILY_API_KEY:
@@ -72,16 +70,6 @@ def check_tavily():
     plan_limit = response_tavily.get("account", {}).get("plan_limit", "None")
 
     return {"name": "Tavily api", "used": plan_usage, "total": plan_limit, "resets_in_seconds": left_time(1)}
-
-
-# def check_openrouter():
-#     headers = {
-#         "Authorization": f"Bearer {OPEN_ROUTER_API_KEY}",
-#         "Content-Type": "application/json"
-#     }
-#
-#     response = requests.get(f"{OPEN_ROUTER_BASE_URL}/credits", headers=headers, timeout=10)
-#     print(response.headers)
 
 
 def check_render():
