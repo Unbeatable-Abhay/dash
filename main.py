@@ -105,6 +105,12 @@ def check_tavily():
 def check_groq():
     return {"name": "Groq api", "used": 609, "total": 1000, "resets_in_seconds": left_time(1)}
 
+def check_gemini():
+    return {"name": "Gemini api", "used": 1000, "total": 1000, "resets_in_seconds": left_time(1)}
+
+def check_cerebras():
+    return {"name": "Cerebras api", "used": 609, "total": 1000, "resets_in_seconds": left_time(1)}
+
 
 def check_render():
     headers = {
@@ -148,7 +154,7 @@ def get_status(service_id):
         "plan": service.get("serviceDetails", {}).get("plan", None)
     }
 
-API_TOTAL = [check_tavily, check_groq]
+API_TOTAL = [check_tavily, check_groq, check_gemini, check_cerebras]
 @app.route("/api/sync", methods=['POST'])
 def sync_dashboard():
     apis = {
