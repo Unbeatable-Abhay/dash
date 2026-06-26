@@ -104,7 +104,3 @@ Two endpoints, identical response shape:
 - [ ] Add OpenRouter credit tracking
 - [ ] Add Groq usage tracking (via rate-limit response headers, since Groq has no dedicated balance endpoint)
 - [ ] Add usage tracking for future TTS/STT providers as they're integrated into other projects
-
-## Author
-
-Built by: Abhay Chauhan
