@@ -2,7 +2,7 @@ import os
 import json
 import requests
 import calendar
-from datetime import datetime
+from datetime import datetime, timedelta
 from selenium import webdriver
 from dotenv import load_dotenv
 from flask_cors import CORS
@@ -45,7 +45,7 @@ def load_cache():
 
 def left_time(token: int):
     now = datetime.now()
-    last_sync_info = now.isoformat()
+    last_sync_info = (now + timedelta(seconds=19800)).isoformat()
     end_of_day = now.replace(hour=23, minute=59, second=59, microsecond=999999)
     time_left = end_of_day - now
     if token == 1:
