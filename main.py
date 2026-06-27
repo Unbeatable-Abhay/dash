@@ -34,7 +34,7 @@ def save_cache(data):
 
 def load_cache():
     if not os.path.exists("cache.json"):
-        return {"last_synced_at": None, "hosting": {}, "apis": [], "projects": [], "monitor": []}
+        return {"last_synced_at": None, "hosting": {}, "apis": [], "projects": [], "monitor": [], "github": []}
     with open("cache.json") as f:
         return json.load(f)
 
@@ -200,6 +200,52 @@ def check_cerebras():
 API_TOTAL = [check_tavily, check_groq, check_gemini, check_cerebras]
 
 
+GITHUB_PAT = os.getenv("GITHUB_PAT")
+GITHUB_BASE_URL = "https://api.github.com"
+
+# Add/remove repos here as your project list changes — nothing else needs
+# to know how many there are, same "loop renders however many exist"
+# pattern as everything else in this app.
+GITHUB_REPOS = [
+    "Unbeatable-Abhay/dash",
+    "Unbeatable-Abhay/gov_awareness",
+    "Unbeatable-Abhay/beru_bot",
+    "Unbeatable-Abhay/Tic_Tac_Toe",
+    "Unbeatable-Abhay/birthday_wisher",
+    "Unbeatable-Abhay/SYNC",
+    "Unbeatable-Abhay/warehoue_manager",
+    "Unbeatable-Abhay/discord_bot",
+]
+
+
+def check_github():
+    headers = {
+        "Authorization": f"Bearer {GITHUB_PAT}",
+        "Accept": "application/vnd.github+json",
+    }
+    repos_data = []
+    for repo in GITHUB_REPOS:
+        try:
+            info = requests.get(f"{GITHUB_BASE_URL}/repos/{repo}", headers=headers, timeout=10).json()
+            views = requests.get(f"{GITHUB_BASE_URL}/repos/{repo}/traffic/views", headers=headers, timeout=10).json()
+            clones = requests.get(f"{GITHUB_BASE_URL}/repos/{repo}/traffic/clones", headers=headers, timeout=10).json()
+
+            repos_data.append({
+                "name": repo.split("/")[-1],
+                "stars": info.get("stargazers_count", 0),
+                "forks": info.get("forks_count", 0),
+                "views_14d": views.get("count", 0),
+                "unique_views_14d": views.get("uniques", 0),
+                "clones_14d": clones.get("count", 0),
+                "unique_clones_14d": clones.get("uniques", 0),
+                "url": info.get("html_url", ""),
+            })
+        except Exception as e:
+            print(f"GitHub stats error for {repo}: {e}")
+
+    return repos_data
+
+
 def get_status(service_id):
     headers = {
         "Authorization": f"Bearer {API_KEY}",
@@ -319,12 +365,19 @@ def sync_dashboard():
         print(f"Cron jobs error: {e}")
         monitor = cached.get("monitor", [])
 
+    try:
+        github = check_github()
+    except Exception as e:
+        print(f"GitHub error: {e}")
+        github = cached.get("github", [])
+
     data = {
         "last_synced_at": current_timestamp_ist(),
         "hosting": hosting,
         "apis": apis_data,
         "projects": projects,
-        "monitor": monitor
+        "monitor": monitor,
+        "github": github
     }
     save_cache(data)
     return jsonify(data), 200

@@ -1,0 +1,25 @@
+.github-stats-section {
+  width: 100%;
+}
+
+.github-stats-section__scroll-wrap {
+  position: relative;
+}
+
+.github-stats-section__row {
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  padding-bottom: 2px;
+}
+
+.github-stats-section__fade {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 8px;
+  width: 36px;
+  background: linear-gradient(to right, transparent, var(--bg-app));
+  pointer-events: none;
+}

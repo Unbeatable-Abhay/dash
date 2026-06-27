@@ -8,6 +8,7 @@ const EMPTY_DATA = {
   apis: [],
   projects: [],
   monitor: [],
+  github: [],
 };
 
 /**

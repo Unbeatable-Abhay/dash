@@ -1,0 +1,58 @@
+.github-repo-card {
+  flex: 0 0 auto;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+}
+
+.github-repo-card__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.github-repo-card__icon {
+  width: 32px;
+  height: 32px;
+  font-size: 16px;
+  border-radius: 10px;
+}
+
+.github-repo-card__name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.github-repo-card__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.github-repo-card__stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.github-repo-card__stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.github-repo-card__stat-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.github-repo-card__window {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
