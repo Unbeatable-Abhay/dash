@@ -82,9 +82,9 @@ Two endpoints, identical response shape:
 ```json
 {
   "last_synced_at": "2026-06-26T13:43:46.471243",
-  "hosting": { "hours_used": 497.6, "hours_total": 750, "renews_on": "2026-06-30" },
+  "hosting": { "hours_used": 375, "hours_total": 750, "renews_on": "2026-06-30" },
   "apis": [
-    { "name": "Tavily api", "used": 295, "total": 1000, "resets_in_seconds": 36972 }
+    { "name": "Tavily api", "used": 500, "total": 1000, "resets_in_seconds": 36972 }
   ],
   "projects": [
     {
