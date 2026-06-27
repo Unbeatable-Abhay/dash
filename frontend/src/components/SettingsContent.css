@@ -184,13 +184,18 @@
   font-size: 14px;
 }
 
-.about-row:last-child {
+.about-row--last {
   border-bottom: none;
+}
+
+.about-row--link {
+  cursor: pointer;
 }
 
 .about-row__icon {
   font-size: 16px;
   color: var(--accent-purple-strong);
+  display: flex;
 }
 
 .about-row__label {
@@ -201,4 +206,16 @@
 
 .about-row__value {
   color: var(--text-secondary);
+}
+
+.about-row__chevron {
+  font-size: 15px;
+  color: var(--text-tertiary);
+}
+
+.settings-footer-caption {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: var(--space-4);
 }

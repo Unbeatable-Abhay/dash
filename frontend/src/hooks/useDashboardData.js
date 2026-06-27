@@ -84,5 +84,24 @@ export function useDashboardData() {
     };
   }, []);
 
-  return { data, isLoading, isSyncing, syncError, dataVersion, sync };
+  const updateJobEnabled = useCallback((jobId, enabled) => {
+    setData((prev) => ({
+      ...prev,
+      monitor: (prev.monitor || []).map((job) => {
+        if (job.job_id !== jobId) return job;
+        if (!enabled) {
+          // Turning off: remember the real status so it can be restored
+          // if this gets rolled back after a failed request.
+          return { ...job, is_enabled: false, health_status: 'disabled', _priorHealthStatus: job.health_status };
+        }
+        // Turning on: restore whatever health_status it had before being
+        // disabled, if we have it. The next real sync will correct this
+        // properly either way — this is just the optimistic guess.
+        const restored = job._priorHealthStatus ?? job.health_status;
+        return { ...job, is_enabled: true, health_status: restored, _priorHealthStatus: undefined };
+      }),
+    }));
+  }, []);
+
+  return { data, isLoading, isSyncing, syncError, dataVersion, sync, updateJobEnabled };
 }

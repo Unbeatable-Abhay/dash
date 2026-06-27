@@ -1,5 +1,5 @@
 import { useTheme } from '../context/ThemeContext';
-import { BrushIcon, SunIcon, MoonIcon, SyncIcon, InfoIcon, TerminalIcon, HeartIcon } from './Icons';
+import { BrushIcon, SunIcon, MoonIcon, SyncIcon, InfoIcon, TerminalIcon, HeartIcon, ChevronIcon, GithubIcon } from './Icons';
 import { formatRelativeTime } from '../utils/format';
 import './SettingsContent.css';
 
@@ -88,13 +88,25 @@ export default function SettingsContent({ lastSyncedAt, isSyncing, syncError, on
         <div className="about-row">
           <span className="about-row__icon"><TerminalIcon /></span>
           <span className="about-row__label">Version</span>
-          <span className="about-row__value">1.0</span>
+          <span className="about-row__value">1.0 (1)</span>
         </div>
-        <div className="about-row">
+        <a
+          className="about-row about-row--link pressable-soft"
+          href="https://github.com/Unbeatable-Abhay/dash"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span className="about-row__icon"><GithubIcon /></span>
+          <span className="about-row__label">Source code</span>
+          <ChevronIcon className="about-row__chevron" />
+        </a>
+        <div className="about-row about-row--last">
           <span className="about-row__icon"><HeartIcon /></span>
-          <span className="about-row__label">Made by Abhay with 💖</span>
+          <span className="about-row__label">Made by Abhay</span>
         </div>
       </section>
+
+      <p className="settings-footer-caption">Dash · Personal infrastructure monitor</p>
     </div>
   );
 }

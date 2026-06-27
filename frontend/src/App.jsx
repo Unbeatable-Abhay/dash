@@ -1,6 +1,7 @@
 import { ThemeProvider } from './context/ThemeContext';
 import { useDashboardData } from './hooks/useDashboardData';
 import { useIsMobile } from './hooks/useIsMobile';
+import { useJobToggle } from './hooks/useJobToggle';
 import AmbientBackground from './components/AmbientBackground';
 import WebShell from './components/WebShell';
 import MobileShell from './components/MobileShell';
@@ -8,13 +9,16 @@ import DashboardContent from './components/DashboardContent';
 import MonitorSection from './components/MonitorSection';
 
 function DashApp() {
-  const { data, isSyncing, syncError, dataVersion, sync } = useDashboardData();
+  const { data, isSyncing, syncError, dataVersion, sync, updateJobEnabled } = useDashboardData();
+  const { toggleJob, pendingJobId, toggleError } = useJobToggle(updateJobEnabled);
   const isMobile = useIsMobile();
 
   const Shell = isMobile ? MobileShell : WebShell;
 
   const dashboardContent = <DashboardContent data={data} versionKey={dataVersion} />;
-  const monitorContent = <MonitorSection jobs={data.monitor} />;
+  const monitorContent = (
+    <MonitorSection jobs={data.monitor} onToggle={toggleJob} pendingJobId={pendingJobId} />
+  );
 
   return (
     <>
@@ -22,7 +26,7 @@ function DashApp() {
       <Shell
         data={data}
         isSyncing={isSyncing}
-        syncError={syncError}
+        syncError={syncError || toggleError}
         onSync={sync}
         dashboardContent={dashboardContent}
         monitorContent={monitorContent}

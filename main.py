@@ -4,7 +4,7 @@ import requests
 import calendar
 from flask_cors import CORS
 from dotenv import load_dotenv
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from datetime import datetime, timedelta, timezone
 
 app = Flask(__name__)
@@ -19,9 +19,9 @@ TAVILY_BASE_URL = "https://api.tavily.com"
 CRON_BASE_URL = "https://api.cron-job.org"
 
 IST = timezone(timedelta(hours=5, minutes=30))
-HISTORY_DEPTH = 10
+HISTORY_DEPTH = 10  # past executions pulled per cron job, for the drift graph
 
-if not API_KEY and not TAVILY_API_KEY and not CRON_API_KEY:
+if not API_KEY and not TAVILY_API_KEY:
     print("No API key found!")
 else:
     print("API key found!")
@@ -77,22 +77,29 @@ def format_duration(seconds):
     return f"{minutes}m {secs}s" if minutes else f"{secs}s"
 
 
-def compute_health_status(history_list):
-    """Returns 'success', 'warning', 'danger', or 'unknown'.
+def compute_health_status(history_list, is_enabled=True):
+    """Returns 'disabled', 'success', 'warning', 'danger', or 'unknown'.
 
-    First-pass heuristic, not a tuned/verified threshold set — revisit once
-    real data has been observed for a while:
+    A disabled job is checked first and always wins — its dot should never
+    show a stale color left over from before it was turned off, since a
+    disabled job stops producing new history entries.
+
+    First-pass heuristic for the rest, not a tuned/verified threshold set —
+    revisit once real data has been observed for a while:
     - danger: 2+ of the last 5 runs failed
     - warning: most recent run failed once, OR its duration is 3x+ the
       recent average (likely cold start)
     - success: otherwise
     """
+    if not is_enabled:
+        return "disabled"
+
     if not history_list:
         return "unknown"
 
     latest = history_list[0]
     latest_failed = (latest.get("status") is not None and latest.get("status") < 0) or (
-            latest.get("httpStatus") is not None and latest.get("httpStatus") >= 400
+        latest.get("httpStatus") is not None and latest.get("httpStatus") >= 400
     )
 
     if latest_failed:
@@ -156,7 +163,7 @@ def check_cron_jobs():
             "name": job.get("title"),
             "job_id": job_id,
             "is_enabled": job.get("enabled"),
-            "health_status": compute_health_status(history),
+            "health_status": compute_health_status(history, job.get("enabled")),
             "last_execution": to_ist(job.get("lastExecution")),
             "next_execution": to_ist(job.get("nextExecution")),
             "last_duration_formatted": format_duration(job.get("duration")),
@@ -175,8 +182,7 @@ def check_tavily():
     plan_usage = response_tavily.get("account", {}).get("plan_usage", None)
     plan_limit = response_tavily.get("account", {}).get("plan_limit", None)
 
-    return {"name": "Tavily api", "used": plan_usage, "total": plan_limit,
-            "resets_in_seconds": seconds_until_midnight()}
+    return {"name": "Tavily api", "used": plan_usage, "total": plan_limit, "resets_in_seconds": seconds_until_midnight()}
 
 
 def check_groq():
@@ -207,7 +213,7 @@ def get_status(service_id):
     return {
         "is_online": status == "live",
         "render_url": service.get("dashboardUrl", None),
-        "plan": service.get("serviceDetails", {}).get("plan", "None")
+        "plan": service.get("serviceDetails", {}).get("plan", None)
     }
 
 
@@ -236,9 +242,55 @@ def check_render():
     return projects
 
 
+def toggle_cron_job(job_id, enabled):
+    headers = {
+        "Authorization": f"Bearer {CRON_API_KEY}",
+        "Content-Type": "application/json",
+    }
+    payload = {"job": {"enabled": enabled}}
+    response = requests.patch(
+        f"{CRON_BASE_URL}/jobs/{job_id}", headers=headers, json=payload, timeout=10
+    )
+    if response.status_code != 200:
+        raise RuntimeError(f"cron-job.org returned {response.status_code}")
+    return True
+
+
+@app.route("/api/monitor/<job_id>/toggle", methods=['POST'])
+def toggle_job_route(job_id):
+    body = request.get_json(silent=True) or {}
+    enabled = body.get("enabled")
+
+    if enabled is None:
+        return jsonify({"error": "Missing 'enabled' field in request body"}), 400
+
+    try:
+        toggle_cron_job(job_id, enabled)
+    except Exception as e:
+        print(f"Toggle error: {e}")
+        return jsonify({"error": "Failed to toggle job"}), 502
+
+    # Update the cached copy immediately so the dashboard reflects the
+    # change without waiting for the next full sync.
+    cached = load_cache()
+    for job in cached.get("monitor", []):
+        if job.get("job_id") == job_id:
+            job["is_enabled"] = enabled
+            job["health_status"] = compute_health_status(job.get("history", []), enabled)
+    save_cache(cached)
+
+    return jsonify({"success": True, "job_id": job_id, "enabled": enabled}), 200
+
+
 @app.route("/api/sync", methods=['POST'])
 def sync_dashboard():
     cached = load_cache()
+
+    # Each data source is isolated — one provider failing (Tavily down,
+    # cron-job.org rate-limited, Render API hiccup) falls back to the last
+    # good cached value for THAT section only, instead of wiping out
+    # everything else in the response.
+
     try:
         hosting = {
             "hours_used": 517.50,

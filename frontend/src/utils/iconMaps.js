@@ -19,6 +19,8 @@ const DEFAULT_PROJECT_ICON = { Icon: LayersIcon, color: 'var(--accent-gray)' };
 // from the approved mobile mockup.
 export function getHealthStatusInfo(status) {
   switch (status) {
+    case 'disabled':
+      return { color: 'var(--text-tertiary)', label: 'Paused', Icon: null };
     case 'success':
       return { color: 'var(--accent-green)', label: null, Icon: null };
     case 'warning':

@@ -5,10 +5,22 @@
   padding: var(--space-4);
 }
 
+.job-card--disabled {
+  opacity: 0.55;
+}
+
 .job-card__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.job-card__header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
 }
 
 .job-card__name {

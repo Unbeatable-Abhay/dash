@@ -1,0 +1,33 @@
+.toggle-switch {
+  width: 36px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--bg-track);
+  position: relative;
+  flex-shrink: 0;
+  transition: background-color 180ms var(--ease-ios);
+}
+
+.toggle-switch--on {
+  background: var(--accent-green);
+}
+
+.toggle-switch:disabled {
+  opacity: 0.6;
+}
+
+.toggle-switch__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 180ms var(--ease-spring);
+}
+
+.toggle-switch--on .toggle-switch__thumb {
+  transform: translateX(14px);
+}

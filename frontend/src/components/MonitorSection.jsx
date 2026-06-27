@@ -1,7 +1,7 @@
 import JobCard from './JobCard';
 import './MonitorSection.css';
 
-export default function MonitorSection({ jobs }) {
+export default function MonitorSection({ jobs, onToggle, pendingJobId }) {
   return (
     <section className="card monitor-section">
       <div className="monitor-section__sticky-heading">
@@ -13,7 +13,12 @@ export default function MonitorSection({ jobs }) {
         {jobs && jobs.length > 0 ? (
           <div className="monitor-section__grid">
             {jobs.map((job) => (
-              <JobCard key={job.job_id || job.name} job={job} />
+              <JobCard
+                key={job.job_id || job.name}
+                job={job}
+                onToggle={onToggle}
+                isPending={pendingJobId === job.job_id}
+              />
             ))}
           </div>
         ) : (
