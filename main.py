@@ -207,7 +207,7 @@ def get_status(service_id):
     return {
         "is_online": status == "live",
         "render_url": service.get("dashboardUrl", None),
-        "plan": service.get("serviceDetails", {}).get("plan", None)
+        "plan": service.get("serviceDetails", {}).get("plan", "None")
     }
 
 
