@@ -58,6 +58,23 @@ export function GithubIcon(props) {
   );
 }
 
+export function ArrowLeftIcon(props) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M19 12H5M5 12l6-6M5 12l6 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function ExternalLinkIcon(props) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M9 7H6a1.5 1.5 0 0 0-1.5 1.5v9A1.5 1.5 0 0 0 6 19h9a1.5 1.5 0 0 0 1.5-1.5v-3" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M13 5h6v6M19 5l-9 9" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export function GearIcon(props) {
   return (
     <svg {...base} {...props}>

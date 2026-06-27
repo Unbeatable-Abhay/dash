@@ -259,7 +259,7 @@ def get_status(service_id):
     return {
         "is_online": status == "live",
         "render_url": service.get("dashboardUrl", None),
-        "plan": service.get("serviceDetails", {}).get("plan", None)
+        "plan": service.get("serviceDetails", {}).get("plan", "None")
     }
 
 
@@ -281,6 +281,7 @@ def check_render():
         projects.append({
             "name": service["name"],
             "type": service["type"],
+            "service_id": service["id"],
             "is_online": status_info["is_online"],
             "render_url": status_info["render_url"],
             "plan": status_info["plan"]
@@ -326,6 +327,90 @@ def toggle_job_route(job_id):
     save_cache(cached)
 
     return jsonify({"success": True, "job_id": job_id, "enabled": enabled}), 200
+
+
+def get_recent_deploys(service_id, limit=5):
+    """Returns up to `limit` recent deploys for a service, newest first,
+    with the fields the detail page needs: commit info, status, timestamp."""
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
+    }
+    response = requests.get(
+        f"{BASE_URL}/services/{service_id}/deploys?limit={limit}",
+        headers=headers, timeout=10
+    )
+    if response.status_code != 200:
+        return []
+
+    deploys = response.json()
+    result = []
+    for item in deploys:
+        deploy = item.get("deploy", item)  # some Render responses nest under "deploy"
+        commit = deploy.get("commit") or {}
+        result.append({
+            "id": deploy.get("id"),
+            "status": deploy.get("status"),
+            "commit_id": (commit.get("id") or "")[:7],
+            "commit_message": commit.get("message", ""),
+            "created_at": deploy.get("createdAt"),
+        })
+    return result
+
+
+def trigger_deploy(service_id):
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
+    }
+    response = requests.post(
+        f"{BASE_URL}/services/{service_id}/deploys", headers=headers, timeout=15
+    )
+    if response.status_code not in (200, 201):
+        raise RuntimeError(f"Render returned {response.status_code}: {response.text}")
+    return response.json()
+
+
+@app.route("/api/projects/<service_id>/deploys", methods=["GET"])
+def get_project_deploys_route(service_id):
+    try:
+        deploys = get_recent_deploys(service_id)
+        return jsonify({"deploys": deploys}), 200
+    except Exception as e:
+        print(f"Error fetching deploys for {service_id}: {e}")
+        return jsonify({"error": "Failed to fetch deploys"}), 502
+
+
+@app.route("/api/projects/<service_id>/redeploy", methods=["POST"])
+def redeploy_route(service_id):
+    try:
+        result = trigger_deploy(service_id)
+        return jsonify({"success": True, "deploy_id": result.get("id")}), 200
+    except Exception as e:
+        print(f"Redeploy error for {service_id}: {e}")
+        return jsonify({"error": "Failed to trigger redeploy"}), 502
+
+
+@app.route("/api/projects/<service_id>/deploys/<deploy_id>/status", methods=["GET"])
+def get_deploy_status_route(service_id, deploy_id):
+    """Lightweight single-deploy status check, polled by the frontend every
+    10 seconds while a redeploy is in progress."""
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
+    }
+    try:
+        response = requests.get(
+            f"{BASE_URL}/services/{service_id}/deploys/{deploy_id}",
+            headers=headers, timeout=10
+        )
+        if response.status_code != 200:
+            return jsonify({"error": "Failed to fetch deploy status"}), 502
+        deploy = response.json()
+        return jsonify({"status": deploy.get("status")}), 200
+    except Exception as e:
+        print(f"Deploy status check error: {e}")
+        return jsonify({"error": "Failed to fetch deploy status"}), 502
 
 
 @app.route("/api/sync", methods=['POST'])

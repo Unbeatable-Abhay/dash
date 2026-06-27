@@ -5,6 +5,9 @@
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-row);
   border-bottom: 1px solid var(--border-row);
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
 }
 
 .project-row:last-child {

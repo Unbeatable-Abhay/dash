@@ -3,14 +3,12 @@ import { ChevronIcon } from './Icons';
 import { getProjectIcon, formatProjectType } from '../utils/iconMaps';
 import './ProjectRow.css';
 
-export default function ProjectRow({ project }) {
+export default function ProjectRow({ project, onSelect }) {
   const { Icon, color } = getProjectIcon(project.type);
 
   return (
-    <a
-      href={project.render_url}
-      target="_blank"
-      rel="noopener noreferrer"
+    <button
+      onClick={() => onSelect(project)}
       className="project-row pressable-soft"
     >
       <div className="project-row__icon" style={{ background: color }}>
@@ -24,6 +22,6 @@ export default function ProjectRow({ project }) {
       </div>
       <StatusPill isOnline={project.is_online} />
       <ChevronIcon className="project-row__chevron" />
-    </a>
+    </button>
   );
 }
