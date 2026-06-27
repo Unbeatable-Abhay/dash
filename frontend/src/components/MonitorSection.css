@@ -1,0 +1,43 @@
+.monitor-section {
+  padding: var(--space-6) 0 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: calc(100vh - 260px);
+}
+
+.monitor-section__sticky-heading {
+  position: sticky;
+  top: 0;
+  background: var(--bg-card);
+  padding: 0 var(--space-6) var(--space-3);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 280ms var(--ease-ios);
+}
+
+.monitor-section__count {
+  font-size: 13px;
+  color: var(--text-tertiary);
+}
+
+.monitor-section__scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 var(--space-4) var(--space-4);
+}
+
+.monitor-section__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-3);
+}
+
+.monitor-section__empty {
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 14px;
+}

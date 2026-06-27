@@ -7,6 +7,7 @@ const EMPTY_DATA = {
   hosting: { hours_used: 0, hours_total: 750, renews_on: null },
   apis: [],
   projects: [],
+  monitor: [],
 };
 
 /**

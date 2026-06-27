@@ -5,6 +5,7 @@ import AmbientBackground from './components/AmbientBackground';
 import WebShell from './components/WebShell';
 import MobileShell from './components/MobileShell';
 import DashboardContent from './components/DashboardContent';
+import MonitorSection from './components/MonitorSection';
 
 function DashApp() {
   const { data, isSyncing, syncError, dataVersion, sync } = useDashboardData();
@@ -12,12 +13,20 @@ function DashApp() {
 
   const Shell = isMobile ? MobileShell : WebShell;
 
+  const dashboardContent = <DashboardContent data={data} versionKey={dataVersion} />;
+  const monitorContent = <MonitorSection jobs={data.monitor} />;
+
   return (
     <>
       <AmbientBackground />
-      <Shell data={data} isSyncing={isSyncing} syncError={syncError} onSync={sync}>
-        <DashboardContent data={data} versionKey={dataVersion} />
-      </Shell>
+      <Shell
+        data={data}
+        isSyncing={isSyncing}
+        syncError={syncError}
+        onSync={sync}
+        dashboardContent={dashboardContent}
+        monitorContent={monitorContent}
+      />
     </>
   );
 }

@@ -12,6 +12,24 @@ const PROJECT_TYPE_MAP = {
 
 const DEFAULT_PROJECT_ICON = { Icon: LayersIcon, color: 'var(--accent-gray)' };
 
+// Health status -> dot color + label + icon, used by Monitor job cards.
+// "success" and "unknown" get a plain dot with no extra text — the dot
+// alone is enough signal. "warning" and "danger" pair the dot with a
+// short label, matching the doubled color+icon+text signaling pattern
+// from the approved mobile mockup.
+export function getHealthStatusInfo(status) {
+  switch (status) {
+    case 'success':
+      return { color: 'var(--accent-green)', label: null, Icon: null };
+    case 'warning':
+      return { color: '#BA7517', label: 'Cold start', Icon: 'alert' };
+    case 'danger':
+      return { color: '#A32D2D', label: null, Icon: 'x' }; // label set dynamically with failure count
+    default:
+      return { color: 'var(--text-tertiary)', label: null, Icon: null };
+  }
+}
+
 export function getProjectIcon(type) {
   return PROJECT_TYPE_MAP[type] || DEFAULT_PROJECT_ICON;
 }

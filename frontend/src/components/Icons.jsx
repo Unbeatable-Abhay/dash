@@ -8,6 +8,48 @@ const base = {
   fill: 'none',
 };
 
+export function ActivityIcon(props) {
+  return (
+    <svg {...base} {...props}>
+      <path
+        d="M3 12.5h3.5l2-6 4 13 2.5-9.5 1.5 2.5H21"
+        stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function ClockIcon(props) {
+  return (
+    <svg {...base} {...props}>
+      <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M12 7.5V12l3.2 2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function AlertTriangleIcon(props) {
+  return (
+    <svg {...base} {...props}>
+      <path
+        d="M12 4.2 21 19.5H3L12 4.2Z"
+        stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"
+      />
+      <path d="M12 10v4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="12" cy="16.6" r="0.9" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function XCircleIcon(props) {
+  return (
+    <svg {...base} {...props}>
+      <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M9.3 9.3l5.4 5.4M14.7 9.3l-5.4 5.4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function GearIcon(props) {
   return (
     <svg {...base} {...props}>

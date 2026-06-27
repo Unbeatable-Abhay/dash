@@ -30,6 +30,24 @@ export function formatRelativeTime(isoDateStr) {
   return `${diffDay} day${diffDay === 1 ? '' : 's'} ago`;
 }
 
+export function formatRelativeToNow(isoDateStr) {
+  if (!isoDateStr) return null;
+  const date = new Date(isoDateStr);
+  if (Number.isNaN(date.getTime())) return null;
+
+  const diffMs = date.getTime() - Date.now();
+  const isFuture = diffMs > 0;
+  const diffSec = Math.abs(Math.floor(diffMs / 1000));
+
+  let label;
+  if (diffSec < 60) label = `${diffSec}s`;
+  else if (diffSec < 3600) label = `${Math.floor(diffSec / 60)}m`;
+  else if (diffSec < 86400) label = `${Math.floor(diffSec / 3600)}h`;
+  else label = `${Math.floor(diffSec / 86400)}d`;
+
+  return isFuture ? `in ${label}` : `${label} ago`;
+}
+
 export function formatNumber(n) {
   if (!Number.isFinite(n)) return '0';
   // Show one decimal only when needed (e.g. 497.57 -> "497.6"), whole
