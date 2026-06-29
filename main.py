@@ -203,9 +203,6 @@ API_TOTAL = [check_tavily, check_groq, check_gemini, check_cerebras]
 GITHUB_PAT = os.getenv("GITHUB_PAT")
 GITHUB_BASE_URL = "https://api.github.com"
 
-# Add/remove repos here as your project list changes — nothing else needs
-# to know how many there are, same "loop renders however many exist"
-# pattern as everything else in this app.
 GITHUB_REPOS = [
     "Unbeatable-Abhay/dash",
     "Unbeatable-Abhay/gov_awareness",
@@ -317,8 +314,6 @@ def toggle_job_route(job_id):
         print(f"Toggle error: {e}")
         return jsonify({"error": "Failed to toggle job"}), 502
 
-    # Update the cached copy immediately so the dashboard reflects the
-    # change without waiting for the next full sync.
     cached = load_cache()
     for job in cached.get("monitor", []):
         if job.get("job_id") == job_id:
@@ -346,7 +341,7 @@ def get_recent_deploys(service_id, limit=5):
     deploys = response.json()
     result = []
     for item in deploys:
-        deploy = item.get("deploy", item)  # some Render responses nest under "deploy"
+        deploy = item.get("deploy", item)
         commit = deploy.get("commit") or {}
         result.append({
             "id": deploy.get("id"),
@@ -416,11 +411,6 @@ def get_deploy_status_route(service_id, deploy_id):
 @app.route("/api/sync", methods=['POST'])
 def sync_dashboard():
     cached = load_cache()
-
-    # Each data source is isolated — one provider failing (Tavily down,
-    # cron-job.org rate-limited, Render API hiccup) falls back to the last
-    # good cached value for THAT section only, instead of wiping out
-    # everything else in the response.
 
     try:
         hosting = {
