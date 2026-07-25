@@ -182,7 +182,7 @@ def check_tavily():
     plan_usage = response_tavily.get("account", {}).get("plan_usage", None)
     plan_limit = response_tavily.get("account", {}).get("plan_limit", None)
 
-    return {"name": "Tavily api", "used": plan_usage, "total": plan_limit, "resets_in_seconds": seconds_until_midnight()}
+    return {"name": "Tavily api", "used": plan_limit - plan_usage, "total": plan_limit, "resets_in_seconds": seconds_until_midnight()}
 
 
 def check_groq():
@@ -205,7 +205,9 @@ GITHUB_BASE_URL = "https://api.github.com"
 
 GITHUB_REPOS = [
     "Unbeatable-Abhay/dash",
-    "Unbeatable-Abhay/gov_awareness",
+    "Unbeatable-Abhay/portfolio",
+    "Unbeatable-Abhay/sarkarly",
+    "Unbeatable-Abhay/Unbeatable-Abhay",
     "Unbeatable-Abhay/beru_bot",
     "Unbeatable-Abhay/Tic_Tac_Toe",
     "Unbeatable-Abhay/birthday_wisher",
