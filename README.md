@@ -1,3 +1,5 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 # Dash
 
 A personal infrastructure monitoring dashboard. One place to check on everything before going to sleep — Render hosting usage, API credits across the providers I actually use, and whether my deployed projects are online.
